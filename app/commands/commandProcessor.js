@@ -1,5 +1,0 @@
-class CommandProcessor {
-  constructor (message) {
-    
-  }
-}
