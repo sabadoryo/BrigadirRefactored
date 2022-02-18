@@ -1,0 +1,30 @@
+{
+  "name": "brigadir",
+  "version": "1.0.0",
+  "description": "Brigadir bot for Zavod server",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sabadoryo/BrigadirRefactored.git"
+  },
+  "dependencies": {
+    "@discordjs/builders": "^0.6.0",
+    "@discordjs/rest": "^0.1.0-canary.0",
+    "@prisma/client": "3.1.1",
+    "axios": "^0.22.0",
+    "discord-api-types": "^0.23.1",
+    "discord.js": "^13.1.0",
+    "dotenv": "^10.0.0",
+    "mysql": "^2.18.1",
+    "node-schedule": "^2.0.0"
+  },
+  "author": "Yernar, Zhanbolat, Alikhan",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/sabadoryo/BrigadirRefactored/issues"
+  },
+  "homepage": "https://github.com/sabadoryo/BrigadirRefactored#readme"
+}
