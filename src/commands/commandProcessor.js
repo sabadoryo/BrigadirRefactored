@@ -1,0 +1,5 @@
+class CommandProcessor {
+  constructor (message) {
+    
+  }
+}
