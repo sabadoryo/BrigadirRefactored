@@ -1,46 +1,52 @@
-const fs = require('fs');
-
 class CommandProcessor {
 
   commandsRoot = '../commands/';
+  discordMessage;
+  commandName = '';
+  params = [];
 
   constructor(message) {
-    if (this.isValidCommand(message.content)) {
-      message.reply('Invalid command!');
+    this.discordMessage = message;
+    this.divideContent(message.content);
+  }
+
+  start() {
+    if (this.isValidCommand()) {
+      this.runCommand();
     } else {
-      this.runCommand(message);
+      this.discordMessage.reply('Invalid command!');
     }
   }
 
-  runCommand(message) {
+  runCommand() {
     try {
 
-        const command = require(this.commandsRoot + this.getCommandPath(message.content));
-        command.run(message);
+      const command = require(this.commandsRoot + this.getCommandPath());
+      command.run(this.discordMessage, this.commandName, this.params);
 
     } catch (error) {
 
       if (error.code === 'MODULE_NOT_FOUND') {
-        message.reply('This is not a command!');
+        this.discordMessage.reply('This is not a command!');
       } else {
-        message.reply('Incomprehensible error, write to programmers');
+        this.discordMessage.reply('Incomprehensible error, write to programmers');
       }
 
     }
   }
 
-  getCommandPath(messageContent) {
-    return messageContent
-      .replace(process.env.COMMAND_SUFFIX, '')
-      .replace('_', '/');
+  getCommandPath() {
+    return this.commandName.replace('_', '/');
   }
 
-  isValidCommand(messageContent) {
-    let result = messageContent.length <= 1;
-    result = result || messageContent.includes('/');
-    result = result || messageContent.includes('  ');
+  isValidCommand() {
+    return !(this.commandName.length <= 1 || this.commandName.includes('/'));
+  }
 
-    return result;
+  divideContent(messageContent) {
+    const result = messageContent.split(' ');
+    this.commandName = result.shift().replace(process.env.COMMAND_SUFFIX, '');
+    this.params = result;
   }
 }
 

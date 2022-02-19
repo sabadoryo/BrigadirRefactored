@@ -5,6 +5,7 @@ module.exports = async msg => {
 
     const CommandProcessor = require('../components/commandProcessor');
     const commandProcessor = new CommandProcessor(msg);
+    commandProcessor.start();
 
   } else {
     console.log("Not command")
