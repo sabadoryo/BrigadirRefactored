@@ -1,5 +1,5 @@
-function run() {
-  console.log('Hello world!');
+function run(message) {
+  message.reply('Hello from test!');
 }
 
 module.exports = {run};

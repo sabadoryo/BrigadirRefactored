@@ -1,12 +1,32 @@
 class CommandProcessor {
+
+  rootPath = '../commands/';
+
   constructor (message) {
-    this.runCommand(message.content)
+    if (this.isValidCommand(message.content)) {
+      message.reply('Invalid command!');
+    } else {
+      this.runCommand(message);
+    }
   }
 
-  runCommand(commandName) {
-    const commandPath = commandName.replace(process.env.COMMAND_SUFFIX, '').replace('_', '/');
-    const command = require('../commands/' + commandPath);
-    command.run();
+  runCommand(message) {
+    const command = require(this.rootPath + this.getPath(message.content));
+    command.run(message);
+  }
+
+  getPath(messageContent) {
+    return messageContent
+      .replace(process.env.COMMAND_SUFFIX, '')
+      .replace('_', '/');
+  }
+
+  isValidCommand(messageContent) {
+    let result = messageContent.length <= 1;
+    result = result || messageContent.includes('/');
+    result = result || messageContent.includes('  ');
+
+    return result;
   }
 }
 
