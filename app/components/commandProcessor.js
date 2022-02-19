@@ -1,3 +1,5 @@
+const BotConfig = require('../config/botConfig');
+
 class CommandProcessor {
 
   commandsRoot = '../commands/';
@@ -36,7 +38,7 @@ class CommandProcessor {
   }
 
   getCommandPath() {
-    return this.commandName.replace('_', '/');
+    return this.commandName.replace(BotConfig.separation_suffix, '/');
   }
 
   isValidCommand() {
@@ -45,7 +47,7 @@ class CommandProcessor {
 
   divideContent(messageContent) {
     const result = messageContent.split(' ');
-    this.commandName = result.shift().replace(process.env.COMMAND_SUFFIX, '');
+    this.commandName = result.shift().replace(BotConfig.command_suffix, '');
     this.params = result;
   }
 }
