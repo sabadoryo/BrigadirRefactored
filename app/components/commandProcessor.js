@@ -1,8 +1,10 @@
+const fs = require('fs');
+
 class CommandProcessor {
 
-  rootPath = '../commands/';
+  commandsRoot = '../commands/';
 
-  constructor (message) {
+  constructor(message) {
     if (this.isValidCommand(message.content)) {
       message.reply('Invalid command!');
     } else {
@@ -11,11 +13,23 @@ class CommandProcessor {
   }
 
   runCommand(message) {
-    const command = require(this.rootPath + this.getPath(message.content));
-    command.run(message);
+    try {
+
+        const command = require(this.commandsRoot + this.getCommandPath(message.content));
+        command.run(message);
+
+    } catch (error) {
+
+      if (error.code === 'MODULE_NOT_FOUND') {
+        message.reply('This is not a command!');
+      } else {
+        message.reply('Incomprehensible error, write to programmers');
+      }
+
+    }
   }
 
-  getPath(messageContent) {
+  getCommandPath(messageContent) {
     return messageContent
       .replace(process.env.COMMAND_SUFFIX, '')
       .replace('_', '/');
