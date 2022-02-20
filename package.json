@@ -19,7 +19,8 @@
     "discord.js": "^13.1.0",
     "dotenv": "^10.0.0",
     "mysql": "^2.18.1",
-    "node-schedule": "^2.0.0"
+    "node-schedule": "^2.0.0",
+    "simple-node-logger": "^21.8.12"
   },
   "author": "Yernar, Zhanbolat, Alikhan",
   "license": "MIT",

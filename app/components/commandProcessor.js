@@ -1,3 +1,4 @@
+const logger = require('simple-node-logger').createSimpleLogger('logs.txt');
 const BotConfig = require('../config/botConfig');
 
 class CommandProcessor {
@@ -25,9 +26,8 @@ class CommandProcessor {
 
       const command = require(this.commandsRoot + this.getCommandPath());
       command.run(this.discordMessage, this.commandName, this.params);
-
     } catch (error) {
-
+      logger.error(error)
       if (error.code === 'MODULE_NOT_FOUND') {
         this.discordMessage.reply('This is not a command!');
       } else {
