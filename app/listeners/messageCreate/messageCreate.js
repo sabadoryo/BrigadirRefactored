@@ -1,9 +1,15 @@
+const {upsertUser} = require('../../models/User')
+
 module.exports = async msg => {
   if (msg.author.bot) return;
 
+  const user = await upsertUser(msg.member.user)
+
+  console.log(user)
+
   if (msg.content.startsWith(process.env.COMMAND_SUFFIX)) {
 
-    const CommandProcessor = require('../components/commandProcessor');
+    const CommandProcessor = require('../../components/commandProcessor');
     const commandProcessor = new CommandProcessor(msg);
     commandProcessor.start();
 
