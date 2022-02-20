@@ -1,5 +1,11 @@
-function run(discordMessage, commandName, params) {
-  discordMessage.reply('Hello from test/test!');
+class Test {
+  discription() {
+    return 'Test command from: test/test';
+  }
+
+  run(user, discordMessage, commandsName, params) {
+    discordMessage.reply('Hello from test/test!');
+  }
 }
 
-module.exports = {run};
+module.exports = Test;
