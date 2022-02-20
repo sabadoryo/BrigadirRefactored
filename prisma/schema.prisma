@@ -1,0 +1,58 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id      Int      @id @default(autoincrement())
+  name    String   @default("")
+  discord_score Int @default(0)
+  discord_id String @unique @default("")
+  steam_id String @default("")
+  calls CallsUsers[]
+  halyavas Halyava[]
+  have_bet Boolean @default(false)
+  bet_amount Int @default(0)
+  bet_for String @default("")
+  @@map("users")
+}
+
+model Call {
+  id     Int       @id @default(autoincrement())
+  is_active Boolean @default(true)
+  name String @default("")
+  user_amount_limit Int @default(0)
+  cur_user_amount Int @default(0)
+  users CallsUsers[]
+  @@map("calls")
+}
+
+model Halyava {
+  id Int @id @default(autoincrement())
+  looter User @relation(fields: [looterId], references: [id])
+  looterId Int
+  createdAt DateTime @default(now())
+}
+
+model CallsUsers {
+   call Call @relation(fields: [callId], references: [id])
+   callId Int
+   user User @relation(fields: [userId], references: [id])
+   userId Int
+   assignedAt DateTime @default(now())
+   @@id([callId, userId])
+   @@map("call_user")
+}
+
+model HalyavaClicker {
+    id Int @id @default(autoincrement())
+    is_active Boolean @default(true)
+    total_clicks Int @default(0)
+}
