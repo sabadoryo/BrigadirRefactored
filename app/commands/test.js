@@ -1,10 +1,10 @@
 class Test {
-  discription() {
+  description() {
     return 'Test command from: test';
   }
 
-  run(user, discordMessage, commandsName, params) {
-    discordMessage.reply('Hello from test!');
+  async run(user, discordMessage, commandsName, params) {
+    discordMessage.reply('/tts Hello from test!');
   }
 }
 

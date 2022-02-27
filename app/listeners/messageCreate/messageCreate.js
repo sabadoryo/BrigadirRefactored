@@ -9,6 +9,6 @@ module.exports = async msg => {
 
   if (msg.content.startsWith(BotConfig.command_suffix)) {
     const commandProcessor = new CommandProcessor(user, msg);
-    commandProcessor.start();
+    await commandProcessor.start();
   }
 };

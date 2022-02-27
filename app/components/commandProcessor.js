@@ -1,6 +1,5 @@
 const logger = require('simple-node-logger').createSimpleLogger('logs.txt');
 const BotConfig = require('../config/botConfig');
-const fs = require('fs');
 
 class CommandProcessor {
 
@@ -8,7 +7,6 @@ class CommandProcessor {
   discordMessage;
   commandName = '';
   params = [];
-  helpCommandMessage = '';
 
   constructor(user, message) {
     this.user = user;
@@ -16,24 +14,20 @@ class CommandProcessor {
     this.divideContent(message.content);
   }
 
-  start() {
-    if (this.isValidCommand() && this.commandName !== BotConfig.help_command_name) {
-      this.runCommand();
-    } else if (this.commandName === BotConfig.help_command_name) {
-      this.runHelpCommand(BotConfig.commands_root.replace('..', 'app')).then(() => {
-        console.log(this.helpCommandMessage);
-      });
+  async start() {
+    if (this.isValidCommand()) {
+      await this.runCommand();
     } else {
       this.discordMessage.reply('Invalid command!');
     }
   }
 
-  runCommand() {
+  async runCommand() {
     try {
 
-      const Command = require(BotConfig.commands_root + this.getCommandPath());
+      const Command = require('../' + BotConfig.commands_root + '/' + this.getCommandPath());
       const command = new Command();
-      command.run(this.user, this.discordMessage, this.commandName, this.params);
+      await command.run(this.user, this.discordMessage, this.commandName, this.params);
 
     } catch (error) {
 
@@ -45,22 +39,6 @@ class CommandProcessor {
       }
 
     }
-  }
-
-  async runHelpCommand(root) {
-    await fs.readdir(root, (err, files) => {
-      files.forEach(file => {
-        const start = fs.statSync(root + file);
-        if (start.isDirectory()) {
-          this.runHelpCommand(root + file + '/');
-        } else {
-          const Command = require(root.replace('app', '..') + file.replace('.js', ''));
-          const command = new Command();
-          this.helpCommandMessage += command.discription() + '\n';
-          console.log(command.discription());
-        }
-      });
-    });
   }
 
   getCommandPath() {
