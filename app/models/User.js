@@ -9,7 +9,7 @@ async function upsertUser(user) {
         create: {
             discord_id: user.id,
             name: user.username,
-            discord_score: 0
+            discord_score: 1
         },
         update: {
             discord_id: user.id,

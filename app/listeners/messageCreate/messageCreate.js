@@ -8,6 +8,12 @@ module.exports = async msg => {
   const user = await upsertUser(msg.member.user);
 
   if (msg.content.startsWith(BotConfig.command_suffix)) {
+
+    if (msg.channel.id != "944535211096559676") {
+      msg.reply(':tools: maintenance mode :tools: ')
+      return;
+    }
+
     const commandProcessor = new CommandProcessor(user, msg);
     await commandProcessor.start();
   }
