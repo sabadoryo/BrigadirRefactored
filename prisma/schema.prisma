@@ -15,6 +15,7 @@ model User {
   name    String   @default("")
   discord_score Int @default(0)
   discord_id String @unique @default("")
+  halyavas Halyava[]
   @@map("users")
 }
 
@@ -23,4 +24,11 @@ model Command {
   name String @unique
   description String @default("")
   @@map("commands")
+}
+
+model Halyava {
+  id Int @id @default(autoincrement())
+  looter User @relation(fields: [looterId], references: [id])
+  looterId Int
+  createdAt DateTime @default(now())
 }
