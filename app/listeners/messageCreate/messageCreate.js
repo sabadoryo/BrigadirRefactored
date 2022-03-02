@@ -9,7 +9,7 @@ module.exports = async msg => {
 
   if (msg.content.startsWith(BotConfig.command_suffix)) {
 
-    if (process.env.MAINTANEANCE_MODE == "ON" && msg.channel.id != "944535211096559676") {
+    if (process.env.MAINTENANCE_MODE == "ON" && msg.channel.id != "944535211096559676") {
       msg.reply(':tools: maintenance mode :tools: ')
       return;
     }
