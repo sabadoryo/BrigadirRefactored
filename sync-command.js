@@ -6,8 +6,7 @@ run('app/' + BotConfig.commands_root + '/');
 
 function run(root) {
   fs.readdir(root, async (err, files) => {
-    for (const file of files) {
-
+    files.map(async file => {
       const start = fs.statSync(root + file);
 
       if (start.isDirectory()) {
@@ -39,6 +38,6 @@ function run(root) {
         });
 
       }
-    }
+    });
   });
 }
