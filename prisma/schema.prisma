@@ -32,3 +32,12 @@ model Halyava {
   looterId Int
   createdAt DateTime @default(now())
 }
+
+model ClanWar {
+  id Int @id @default(autoincrement())
+  name String
+  teamA Json
+  teamB Json
+  is_finished Boolean @default(false)
+
+}
