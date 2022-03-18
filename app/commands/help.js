@@ -2,7 +2,7 @@ const {PrismaClient} = require('@prisma/client');
 
 class Help {
   description() {
-    return 'This help';
+    return 'heeeeeeelp';
   }
 
   async run(user, discordMessage, commandsName, params) {

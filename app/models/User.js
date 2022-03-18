@@ -1,8 +1,7 @@
-const {PrismaClient} = require('@prisma/client')
-const prisma = new PrismaClient()
+const db = require('../components/database')
 
 async function upsertUser(user) {
-    return prisma.user.upsert({
+    return db.user.upsert({
         where: {
             discord_id: user.id
         },
@@ -13,11 +12,30 @@ async function upsertUser(user) {
         },
         update: {
             discord_id: user.id,
-            name: user.username
+            name: user.username,
+            discord_score: {
+                increment : 1
+            }
+        }
+    })
+}
+
+async function getUserWithClanwarProfiles(userId) {
+    return db.user.findUnique({
+        where: {
+            id: userId
+        },
+        include : {
+            clanwarProfiles : {
+                include : {
+                    discipline: true
+                }
+            }
         }
     })
 }
 
 module.exports = {
-  upsertUser
+  upsertUser,
+  getUserWithClanwarProfiles
 }

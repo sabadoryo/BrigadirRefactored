@@ -16,7 +16,32 @@ model User {
   discord_score Int @default(0)
   discord_id String @unique @default("")
   halyavas Halyava[]
+  teams TeamMember[]
+  clanwarProfiles UserClanwarProfile[]
+  clanwars Clanwar[]
+
   @@map("users")
+}
+
+model Discipline {
+  id Int @id @default(autoincrement())
+  name String? @unique
+  clanwarProfiles UserClanwarProfile[]
+  clanwars Clanwar[]
+
+  @@map("discipline")
+}
+
+model UserClanwarProfile {
+  id Int @id @default(autoincrement())
+  user_id Int
+  user User? @relation(fields: [user_id], references: [id])
+  discipline_id Int
+  discipline Discipline @relation(fields: [discipline_id], references: [id])
+  points Int @default(1000)
+
+  @@unique([user_id, discipline_id])
+  @@map("clanwar_profile")
 }
 
 model Command {
@@ -31,13 +56,47 @@ model Halyava {
   looter User @relation(fields: [looterId], references: [id])
   looterId Int
   createdAt DateTime @default(now())
+
+  @@map("halyava")
 }
 
-model ClanWar {
+model Clanwar {
   id Int @id @default(autoincrement())
   name String
-  teamA Json
-  teamB Json
-  is_finished Boolean @default(false)
+  teamA_id Int
+  teamB_id Int
+  teamA Team? @relation("teamA", fields: [teamA_id], references: [id])
+  teamB Team? @relation("teamB", fields: [teamB_id], references: [id])
+  start_time DateTime @default(now())
+  end_time DateTime?
+  winner Team? @relation("winner", fields: [winner_id], references: [id]) 
+  winner_id Int?
+  voiceA_id String?
+  voiceB_id String?
+  discipline Discipline? @relation(fields: [discipline_id], references: [id])
+  discipline_id Int?
+  pog User? @relation(fields: [pog_id], references: [id])
+  pog_id Int?
+  @@map("clanwar")
+}
 
+model Team {
+  id Int @id @default(autoincrement())
+  name String
+  teamA Clanwar? @relation("teamA")
+  teamB Clanwar? @relation("teamB")
+  winner Clanwar? @relation("winner")
+  members TeamMember[]
+
+  @@map("team")
+}
+
+model TeamMember{
+  id Int @id @default(autoincrement())
+  member User @relation(fields: [member_id], references: [id])
+  member_id Int
+  team Team @relation(fields: [team_id], references: [id])
+  team_id Int
+
+  @@map("team_members")
 }

@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start" : "node sync-command.js && node index.js"
+    "start": "node sync-command.js && node index.js"
   },
   "repository": {
     "type": "git",
@@ -19,9 +19,12 @@
     "discord-api-types": "^0.23.1",
     "discord.js": "^13.1.0",
     "dotenv": "^10.0.0",
+    "embed-table": "^3.0.0",
+    "minimist": "^1.2.5",
     "mysql": "^2.18.1",
     "node-schedule": "^2.0.0",
-    "simple-node-logger": "^21.8.12"
+    "simple-node-logger": "^21.8.12",
+    "unique-string": "^3.0.0"
   },
   "author": "Yernar, Zhanbolat, Alikhan",
   "license": "MIT",
