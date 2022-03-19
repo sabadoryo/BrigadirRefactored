@@ -1,4 +1,4 @@
-Brigadir - Discord bot for Zavod server.
+Brigadir - Discord bot for <a href="https://discord.gg/zav0d">Zavod </a>server.
 
 1) Git clone this repo. Node(14+) and npm(8+) required on your machine
 2) After cloning the repo - 'npm install'
