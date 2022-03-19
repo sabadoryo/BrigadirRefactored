@@ -27,10 +27,8 @@ class ClanWars {
 
   description() {
     return `Начать рейтинговый clan wars.
-    Флаги:
-    --discipline
-    --name
-    Очень много валидации, поэтому пробуйте прописывать флаги если будет ошибка то вам ее покажут`;
+    Флаги: --discipline=? --name=? --alghorithm=<coming soon>
+    Команды: !cw end --name=cwname - закончить кв; !cw cancel --name=cwname - отменить кв`;
   }
 
   async run(user, message, commandsName, params) {
