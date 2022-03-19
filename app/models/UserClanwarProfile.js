@@ -29,6 +29,9 @@ async function updateUserClanwarProfilePoints(userId, disciplineId, type, amount
       points: {
        increment: type === 'inc' ? amount : -amount
       }
+    },
+    include : {
+      user: true
     }
   })
 }

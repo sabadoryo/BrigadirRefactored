@@ -1,12 +1,13 @@
 const db  =  require('../components/database')
 const minimist = require('minimist');
-const { upsertUser } = require('../models/User')
+const { upsertUser, getUsersWithinRangeWhereDiscipline } = require('../models/User')
 const { upsertUserClanWarProfile, updateUserClanwarProfilePoints } = require ('../models/UserClanwarProfile')
-const { RANKED, teamATemplateName, teamBTemplateName, CW_CATEGORY_ID } = require('../logic/cw')
+const { RANKED, teamATemplateName, teamBTemplateName, CW_CATEGORY_ID, MAIN_VOICE_ID, startMvpPollCollector } = require('../logic/cw')
 const { createDefaultTable} = require ('../helpers/defaultTable')
-const { getClanwarByName, createClanwar, finisClanwar } = require('../models/ClanWar');
+const { getClanwarByName, createClanwar, finishClanwar, clanwarSetPog } = require('../models/ClanWar');
 const { createTeam } = require('../models/Team');
 const { getDisciplineByName } = require('../models/Discipline');
+const { selectMenu } = require('../helpers/selectMenu');
 
 class ClanWars {
   algorithms = ["ranked", "preset", "random"];
@@ -35,14 +36,10 @@ class ClanWars {
   async run(user, message, commandsName, params) {
     this.message = message;
     this.args = minimist(params)
-    this.voiceChannel = message.member.voice.channel; 
-
+    this.voiceChannel = message.member.voice.channel;
     const mode = this.args._.includes('cancel') ? 'cancel' : this.args._.includes('end') ? 'end' : 'start'
+
     const validator = await this.validate(mode) 
-
-    this.algorithm = this.algorithms.includes(this.args.algorithm) ? this.args.algorithm : RANKED;
-    this.discipline = await getDisciplineByName(this.args.discipline)
-
     if (validator.errorFound) {
       this.message.reply(validator.errorMessage)
       return;
@@ -50,10 +47,16 @@ class ClanWars {
 
     switch (mode) {
       case 'start':
+        this.algorithm = this.algorithms.includes(this.args.algorithm) ? this.args.algorithm : RANKED;
+        this.discipline = await getDisciplineByName(this.args.discipline)
         this.startClanwar();
         break;
       case 'end':
         this.endClanwar();
+        break;
+      case 'cancel':
+        this.cancelClanwar();
+        break;
     }
   }
 
@@ -80,20 +83,7 @@ class ClanWars {
       usersId.push(user.id)
     }
 
-    this.players = await db.user.findMany({
-      where: {
-        id: { in: usersId }
-      },
-      include: {
-        clanwarProfiles : {
-          where: {
-            discipline: {
-              name: this.discipline.name
-            }
-          }
-        }
-      }
-    })
+    this.players = await getUsersWithinRangeWhereDiscipline(usersId, this.discipline)
   }
 
   balanceTeams() {
@@ -177,13 +167,13 @@ class ClanWars {
     const disciplineNames = disciplines.map(d => d.name)
 
     if (!this.args.discipline && validationMode === 'start') {
-      errorMessage =  `Укажите дисциплину: **--discpline=?**\nСуществующие дисциплины: ${disciplineNames.join("")}`;
+      errorMessage =  `Укажите дисциплину: **--discpline=?**\nСуществующие дисциплины: ${disciplineNames.join(",")}`;
 
       return { errorFound, errorMessage };
     }
 
     if (!disciplineNames.includes(this.args.discipline) && validationMode === 'start') {
-      errorMessage =  `Несуществующая дисциплина: **${this.args.discipline}**\nСуществующие дисциплины: ${disciplineNames}`;
+      errorMessage =  `Несуществующая дисциплина: **${this.args.discipline}**\nСуществующие дисциплины: ${disciplineNames.join(",")}`;
 
       return { errorFound, errorMessage };
     }
@@ -197,6 +187,12 @@ class ClanWars {
     
     if (isAlreadyOnGoingClanwar && validationMode === 'start') {
       errorMessage = `Квшка с названием ${this.args.name} уже идет и не закончена`;
+
+      return { errorFound, errorMessage };
+    }
+
+    if (!isAlreadyOnGoingClanwar && validationMode === 'cancel') {
+      errorMessage = `Кв с названием ${this.args.name} не существует`
 
       return { errorFound, errorMessage };
     }
@@ -216,7 +212,7 @@ class ClanWars {
       console.log(clanwar)
 
       if (!clanwar) {
-        errorMessage = `Такое кв **${this.args.name}** еще не начато: **--winner=teamA**`
+        errorMessage = `Такое кв **${this.args.name}** еще не начато`
         return { errorFound, errorMessage };
       }
 
@@ -225,11 +221,11 @@ class ClanWars {
         return { errorFound, errorMessage };
       }
     }
-    if (this.voiceChannel.members.size !== 10 && validationMode === 'start') {
-      errorMessage = 'На голосовом канале должно находиться ровно 10 работяг'
+    // if (validationMode === 'start' && this.voiceChannel.members.size !== 10) {
+    //   errorMessage = 'На голосовом канале должно находиться ровно 10 работяг'
   
-      return { errorFound, errorMessage };
-    }
+    //   return { errorFound, errorMessage };
+    // }
 
     errorFound = false;
     errorMessage = null;
@@ -239,10 +235,11 @@ class ClanWars {
   }
   
   async endClanwar() {
-    this.clanwar = await getClanwarByName(this.args.name)
+    this.clanwar = await getClanwarByName(this.args.name);
     await this.updatePoints();
     await this.closeClanwar();
-    await this.deleteTempVoiceChannels()
+    await this.transerEveryoneToMainVoice();
+    await this.startPogPoll();
   }
 
   async updatePoints() {
@@ -260,24 +257,63 @@ class ClanWars {
     this.winnerTeam = winnerTeam
   }
 
-  async deleteTempVoiceChannels() {
+  async transerEveryoneToMainVoice() {
     const tempVoiceA = this.message.guild.channels.cache.find(r => r.id === this.clanwar.voiceA_id);
     const tempVoiceB = this.message.guild.channels.cache.find(r => r.id === this.clanwar.voiceB_id);
 
+    for (const [memberId, member] of tempVoiceA.members) {
+      await member.voice.setChannel(MAIN_VOICE_ID)
+    }
+
+    for (const [memberId, member] of tempVoiceB.members) {
+      await member.voice.setChannel(MAIN_VOICE_ID)
+    }
+    
     tempVoiceA.delete();
     tempVoiceB.delete();
   }
 
   async closeClanwar() {
-    const cw = await finisClanwar(this.clanwar, this.winnerTeam.id)
-    const content = `@everyone\nCW **${this.clanwar.name}** - окончен!\nПобеда команды - ${cw.winner.name}`
-    const rowsEmbed = cw.winner.members.map(member => {
+    this.clanwar = await finishClanwar(this.clanwar, this.winnerTeam.id)
+    const content = `@everyone\nCW **${this.clanwar.name}** - окончен!\nПобеда команды - ${this.clanwar.name}`
+    const rowsEmbed = this.clanwar.winner.members.map(member => {
       return { name: member.member.name, value: member.member.clanwarProfiles[0].points }
     })
 
     const table = createDefaultTable(rowsEmbed, 'Обновленные ранги победителей')
-
     await this.message.reply({ content, embeds : [table] })
+  }
+
+  async startPogPoll() {
+    const options = this.clanwar.winner.members.map( member => {
+      return { label : member.member.name, value : member.member.id, description : member.member.clanwarProfiles[0].points}
+    })
+    const select = selectMenu(this.clanwar.id, 'Выберите MVP', options)
+
+    const mvpPollMessage = await this.message.reply({
+      components : [
+        select
+      ],
+      content: "@everyone Выберите MVP, голосование длится 30 секунд"
+    });
+
+    const pogId = await startMvpPollCollector(mvpPollMessage, this.clanwar)
+
+    const pog = await updateUserClanwarProfilePoints(parseInt(pogId), this.clanwar.discipline_id, 'inc', 15)
+
+    await clanwarSetPog(this.clanwar.id, pog.id)
+
+    mvpPollMessage.edit({
+      content: `@everyone POG of **${this.clanwar.name}** is  <@${pog.user.discord_id}>:crown:`,
+      components: []
+    })
+  }
+
+  async cancelClanwar() {
+    this.clanwar = await getClanwarByName(this.args.name)
+    await finishClanwar(this.clanwar)
+    await this.transerEveryoneToMainVoice()
+    this.message.reply(`Кв ${this.clanwar.name} отменено`)
   }
 }
 

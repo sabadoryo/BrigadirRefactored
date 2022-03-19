@@ -50,7 +50,7 @@ async function createClanwar(name, teamAId, teamBId, disciplineId, voiceAId, voi
   })
 }
 
-async function finisClanwar(clanwar, winnerId) {
+async function finishClanwar(clanwar, winnerId) {
   return db.clanwar.update({
     where: {
       id: clanwar.id
@@ -81,8 +81,20 @@ async function finisClanwar(clanwar, winnerId) {
   })
 }
 
+async function clanwarSetPog(clanwarId, pogId) {
+  return db.clanwar.update({
+    where: {
+      id: clanwarId
+    },
+    data: {
+      pog_id : pogId
+    }
+  })
+}
+
 module.exports = {
   getClanwarByName,
   createClanwar,
-  finisClanwar
+  finishClanwar,
+  clanwarSetPog,
 }

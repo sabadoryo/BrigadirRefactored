@@ -35,7 +35,25 @@ async function getUserWithClanwarProfiles(userId) {
     })
 }
 
+async function getUsersWithinRangeWhereDiscipline(userIds, discipline) {
+    return db.user.findMany({
+        where: {
+            id: { in: userIds }
+        },
+        include: {
+            clanwarProfiles : {
+                where: {
+                    discipline: {
+                        name: discipline.name
+                    }
+                }
+            }
+        }
+    })
+}
+
 module.exports = {
   upsertUser,
-  getUserWithClanwarProfiles
+  getUserWithClanwarProfiles,
+  getUsersWithinRangeWhereDiscipline
 }
