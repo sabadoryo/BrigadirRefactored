@@ -13,7 +13,7 @@ function startMvpPollCollector(mvpPollMessage, clanwar) {
     }
     const collector = mvpPollMessage.createMessageComponentCollector({
       filter,
-      time: 5000
+      time: 30000
     })
   
     collector.on('end', async collected => {
