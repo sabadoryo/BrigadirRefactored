@@ -219,11 +219,11 @@ class ClanWars {
         return { errorFound, errorMessage };
       }
     }
-    // if (validationMode === 'start' && this.voiceChannel.members.size !== 10) {
-    //   errorMessage = 'На голосовом канале должно находиться ровно 10 работяг'
+    if (validationMode === 'start' && this.voiceChannel.members.size !== 10) {
+      errorMessage = 'На голосовом канале должно находиться ровно 10 работяг'
   
-    //   return { errorFound, errorMessage };
-    // }
+      return { errorFound, errorMessage };
+    }
 
     errorFound = false;
     errorMessage = null;
