@@ -18,7 +18,7 @@ class Mypoints {
       })
     }
 
-    rowEmbeds.push({name: "DiscordScore", value: userData.discord_score})
+    rowEmbeds.push({name: "DiscordScore???", value: userData.discord_score})
 
     const table = createDefaultTable(rowEmbeds, 'Ваши поинты')
 
@@ -29,7 +29,8 @@ class Mypoints {
       ]
     }).then(m => {
       setTimeout(() => {
-        m.delete()
+        m.delete(),
+        discordMessage.delete()
       }, 10000)
     })
   }
