@@ -6,10 +6,7 @@ const BotConfig = require('../../config/botConfig');
 module.exports = async msg => {
   if (msg.author.bot) return;
 
-
-  if (msg.member) {
-    const user = await upsertUser(msg.member.user);
-  }
+  const user = await upsertUser(msg.member.user);
 
   if (msg.content.startsWith(BotConfig.command_suffix)) {
 
