@@ -2,7 +2,7 @@ const RANKED = 'ranked'
 const teamATemplateName = 'teamA'
 const teamBTemplateName = 'teamB'
 const CW_CATEGORY_ID = '634799085991231521'
-const MAIN_VOICE_ID = '851862381352058940'
+const MAIN_VOICE_ID = '700559004291563531'
 
 function startMvpPollCollector(mvpPollMessage, clanwar) {
   return new Promise((resolve, reject) => {
