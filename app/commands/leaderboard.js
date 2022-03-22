@@ -56,6 +56,7 @@ class Leaderboard {
     }).then(m => {
       setTimeout(() =>  {
         m.delete()
+        discordMessage.delete()
       }, 30000)
     })
   }
