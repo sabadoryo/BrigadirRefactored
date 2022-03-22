@@ -27,8 +27,11 @@ class Mypoints {
       embeds: [
         table
       ]
+    }).then(m => {
+      setTimeout(() => {
+        m.delete()
+      }, 10000)
     })
-    return;
   }
 }
 

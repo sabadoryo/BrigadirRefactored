@@ -1,10 +1,10 @@
 const { MessageEmbed } = require('discord.js');
 
-function createDefaultTable(rows = [], title) {
+function createDefaultTable(rows = [], title, description = 'GL HF!', color = '#0099ff') {
   const table = new MessageEmbed()
-    .setColor('#0099ff')
+    .setColor(color)
     .setTitle(title)
-    .setDescription('GL HF!');
+    .setDescription(description);
 
   for (const row of rows) {
     if (row.name && row.value) {

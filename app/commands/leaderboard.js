@@ -26,16 +26,37 @@ class Leaderboard {
       return;
     }
 
-    const romsEmbed = discipline.clanwarProfiles.map(p => {
-      return {name: p.user.name, value: p.points}
+    let gold = [], silver = [], bronze = []
+
+    discipline.clanwarProfiles.forEach((profile, i) => {
+      let data = {name: `${i + 1}.${profile.user.name}`, value: profile.points}
+      if (i < 3) {
+        gold.push(data)
+      }
+
+      if(i >= 3 && i < 7) {
+        silver.push(data)
+      }
+
+      if (i >= 7 && i < 10) {
+        bronze.push(data)
+      }
     })
 
-    const table = createDefaultTable(romsEmbed, `Лидеры ${discipline.name}`)
+    const goldTable = createDefaultTable(gold, `top 3 ${discipline.name}`, 'golden boyz', '#FFD700')
+    const silverTable = createDefaultTable(silver, `top 4 - 7 ${discipline.name}`, 'silver boyz', '#C0C0C0')
+    const bronzeTable = createDefaultTable(bronze, `top 8+ ${discipline.name}`, 'bronze boyz', '#CD7F32')
 
     discordMessage.reply({
       embeds: [
-        table
+        goldTable,
+        silverTable,
+        bronzeTable
       ]
+    }).then(m => {
+      setTimeout(() =>  {
+        m.delete()
+      }, 30000)
     })
   }
 }

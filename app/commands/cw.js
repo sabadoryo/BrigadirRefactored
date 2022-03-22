@@ -34,6 +34,7 @@ class ClanWars {
   async run(user, message, commandsName, params) {
     this.message = message;
     this.args = minimist(params)
+    this.acronymizeParams()
     this.voiceChannel = message.member.voice.channel;
     const mode = this.args._.includes('cancel') ? 'cancel' : this.args._.includes('end') ? 'end' : 'start'
 
@@ -95,9 +96,12 @@ class ClanWars {
             return 1;
           }
           return 0;
-        })    
-        this.teamA = this.players.filter((v, i) => i % 2);
-        this.teamB = this.players.filter((v ,i) => !(i % 2));
+        })
+        const teamAIds = [0,9,2,7,5]
+        const teamBIds = [1,8,3,6,4]
+
+        this.teamA = this.players.filter((v, i) => teamAIds.includes(i));
+        this.teamB = this.players.filter((v ,i) => teamBIds.includes(i));
     }
   }
 
@@ -260,15 +264,17 @@ class ClanWars {
     const tempVoiceB = this.message.guild.channels.cache.find(r => r.id === this.clanwar.voiceB_id);
 
     for (const [memberId, member] of tempVoiceA.members) {
-      await member.voice.setChannel(MAIN_VOICE_ID)
+      member.voice.setChannel(MAIN_VOICE_ID)
     }
 
     for (const [memberId, member] of tempVoiceB.members) {
-      await member.voice.setChannel(MAIN_VOICE_ID)
+      member.voice.setChannel(MAIN_VOICE_ID)
     }
     
-    tempVoiceA.delete();
-    tempVoiceB.delete();
+    setTimeout(() => {
+      tempVoiceA.delete();
+      tempVoiceB.delete();  
+    }, 10000)
   }
 
   async closeClanwar() {
@@ -312,6 +318,20 @@ class ClanWars {
     await finishClanwar(this.clanwar)
     await this.transerEveryoneToMainVoice()
     this.message.reply(`Кв ${this.clanwar.name} отменено`)
+  }
+
+  acronymizeParams() {
+    if (this.args.n) {
+      this.args.name = this.args.n
+    }
+
+    if (this.args.d) {
+      this.args.discipline = this.args.d
+    }
+
+    if (this.args.w) {
+      this.args.winner = this.args.w
+    }
   }
 }
 
