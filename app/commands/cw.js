@@ -152,13 +152,13 @@ class ClanWars {
   async anounceClanwar() {
     let anouncement = `@everyone КВшка ${this.clanwar.name} по ${this.discipline.name} только что началась!\n`;
 
-    const teamAMetaData = this.teamAMeta.map(m => { return { name: m.name, value : m.clanwarProfiles[0].points }})
-    const teamBMetaData = this.teamBMeta.map(m => { return { name: m.name, value : m.clanwarProfiles[0].points }})
+    const teamAMetaData = this.teamAMeta.map(m => { return { name: m.name, value : '-' }})
+    const teamBMetaData = this.teamBMeta.map(m => { return { name: m.name, value : '-' }})
     
     const tableA = createDefaultTable(teamAMetaData, this.teamA.name);
     const tableB = createDefaultTable(teamBMetaData, this.teamB.name);
 
-    this.message.reply({embeds : [tableA, tableB]})
+    this.message.reply({content: anouncement ,embeds : [tableA, tableB]})
   }
 
   async validate(validationMode) {
@@ -279,9 +279,9 @@ class ClanWars {
 
   async closeClanwar() {
     this.clanwar = await finishClanwar(this.clanwar, this.winnerTeam.id)
-    const content = `@everyone\nCW **${this.clanwar.name}** - окончен!\nПобеда команды - ${this.clanwar.name}`
+    const content = `@everyone\nCW **${this.clanwar.name}** - окончен!\nПобеда команды - ${this.winnerTeam.name}`
     const rowsEmbed = this.clanwar.winner.members.map(member => {
-      return { name: member.member.name, value: member.member.clanwarProfiles[0].points }
+      return { name: member.member.name, value: '-' }
     })
 
     const table = createDefaultTable(rowsEmbed, 'Обновленные ранги победителей')
