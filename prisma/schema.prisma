@@ -19,6 +19,9 @@ model User {
   teams TeamMember[]
   clanwarProfiles UserClanwarProfile[]
   clanwars Clanwar[]
+  parties PartyMember[]
+  partiesLeader Party[]
+  queues QueueMember[]
 
   @@map("users")
 }
@@ -28,7 +31,8 @@ model Discipline {
   name String? @unique
   clanwarProfiles UserClanwarProfile[]
   clanwars Clanwar[]
-
+  parties Party[]
+  queues Queue[]
   @@map("discipline")
 }
 
@@ -99,4 +103,45 @@ model TeamMember{
   team_id Int
 
   @@map("team_members")
+}
+
+model Party {
+  id Int @id @default(autoincrement())
+  name String
+  discipline_id Int?
+  discipline Discipline? @relation(fields: [discipline_id], references: [id])
+  members PartyMember[]
+  leader User? @relation(fields: [leader_id], references: [id])
+  leader_id Int?
+
+  @@map("party")
+}
+
+model PartyMember {
+  id Int @id @default(autoincrement())
+  member User @relation(fields: [member_id], references: [id])
+  member_id Int
+  party Party @relation(fields: [party_id], references: [id])
+  party_id Int
+
+  @@map("party_members")
+}
+
+model Queue {
+  id Int @id @default(autoincrement())
+  name String @unique
+  discipline_id Int?
+  discipline Discipline? @relation(fields: [discipline_id], references: [id])
+  members QueueMember[]
+  amount Int?
+  is_opened Boolean @default(true)
+}
+
+model QueueMember {
+  id Int @id @default(autoincrement())
+  member User @relation(fields: [member_id], references: [id])
+  member_id Int
+  queue Queue @relation(fields: [queue_id], references: [id])
+  queue_id Int
+  joined_at DateTime @default(now())
 }

@@ -211,7 +211,6 @@ class ClanWars {
         return { errorFound, errorMessage };
       }
       const clanwar = await getClanwarByName(this.args.name)
-      console.log(clanwar)
 
       if (!clanwar) {
         errorMessage = `Такое кв **${this.args.name}** еще не начато`
@@ -223,11 +222,11 @@ class ClanWars {
         return { errorFound, errorMessage };
       }
     }
-    if (validationMode === 'start' && this.voiceChannel.members.size !== 10) {
-      errorMessage = 'На голосовом канале должно находиться ровно 10 работяг'
+    // if (validationMode === 'start' && this.voiceChannel.members.size !== 10) {
+    //   errorMessage = 'На голосовом канале должно находиться ровно 10 работяг'
   
-      return { errorFound, errorMessage };
-    }
+    //   return { errorFound, errorMessage };
+    // }
 
     errorFound = false;
     errorMessage = null;
@@ -274,7 +273,7 @@ class ClanWars {
     setTimeout(() => {
       tempVoiceA.delete();
       tempVoiceB.delete();  
-    }, 10000)
+    }, 300000)
   }
 
   async closeClanwar() {

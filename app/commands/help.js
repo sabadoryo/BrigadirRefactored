@@ -15,7 +15,7 @@ class Help {
 
     let message = '';
     commands.map((command) => {
-      message += command.name + ': ' + command.description + '\n';
+      message += `**${command.name}**` + ' : ' + command.description + '\n\n';
     });
 
     discordMessage.reply(message);
