@@ -65,8 +65,8 @@ class Queue {
       const userIds = queue.members.map(m => m.member.id)
       if (userIds.includes(this.user.id)) {
       this.discordMessage.reply(`Чел ты уже встал в очередь ${queue.name}`)
-      }
       return false;
+      }
     }
 
     return true;
