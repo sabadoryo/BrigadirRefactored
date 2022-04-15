@@ -62,7 +62,7 @@ class Queue {
     }
 
     if (mode == 'join' && queue) {
-      const userIds = queue.members.map(m => m.members.id)
+      const userIds = queue.members.map(m => m.member.id)
       if (userIds.includes(this.user.id)) {
       this.discordMessage.reply(`Чел ты уже встал в очередь ${queue.name}`)
       }
