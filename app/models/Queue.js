@@ -30,7 +30,7 @@ async function findQueueByName(name) {
           member: true
         },
         orderBy: {
-          joined_at: 'desc'
+          joined_at: 'asc'
         }
       }
     }

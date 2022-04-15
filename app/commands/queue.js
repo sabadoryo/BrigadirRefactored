@@ -59,13 +59,14 @@ class Queue {
 
     if (mode == 'join' && !queue) {
       this.discordMessage.reply('Такой очереди не существует')
+      return false;
     }
 
     if (mode == 'join' && queue) {
       const userIds = queue.members.map(m => m.member.id)
       if (userIds.includes(this.user.id)) {
-      this.discordMessage.reply(`Чел ты уже встал в очередь ${queue.name}`)
-      return false;
+        this.discordMessage.reply(`Чел ты уже встал в очередь ${queue.name}`)
+        return false;
       }
     }
 
@@ -90,7 +91,7 @@ class Queue {
   async joinQueue() {
     const queue = await connectUserToQueue(this.args.name, this.user.id)
 
-    console.log(queue)
+    this.discordMessage.reply(`Вы были добавлены к очереди: ${queue.name}`)
   }
 
   async getQueueList() {
