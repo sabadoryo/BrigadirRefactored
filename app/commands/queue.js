@@ -61,7 +61,7 @@ class Queue {
       this.discordMessage.reply('Такой очереди не существует')
     }
 
-    const userIds = queue.members.map(m => m.id)
+    const userIds = queue.members.map(m => m.members.id)
     if (mode == 'join' && userIds.includes(this.user.id)) {
       this.discordMessage.reply(`Чел ты уже встал в очередь ${queue.name}`)
       return false;
