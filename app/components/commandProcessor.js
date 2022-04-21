@@ -1,5 +1,6 @@
 const logger = require('simple-node-logger').createSimpleLogger('logs.txt');
 const BotConfig = require('../config/botConfig');
+const ParamProcessor = require('./paramProcessor');
 
 class CommandProcessor {
 
@@ -27,6 +28,10 @@ class CommandProcessor {
 
       const Command = require('../' + BotConfig.commands_root + '/' + this.getCommandPath());
       const command = new Command();
+      const paramProcessor = new ParamProcessor(command, this.params);
+      if (paramProcessor.notFoundFlags.length) {
+        this.discordMessage.reply('Not found flags: ' + paramProcessor.notFoundFlags.toString());
+      }
       await command.run(this.user, this.discordMessage, this.commandName, this.params);
 
     } catch (error) {
