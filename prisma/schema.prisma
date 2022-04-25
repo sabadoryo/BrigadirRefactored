@@ -142,6 +142,7 @@ model Queue {
   voice_channel_id String? @default("700559004291563531")
   host_id Int? 
   host User? @relation(fields: [host_id], references: [id], name: "hostedQueues")
+  created_at DateTime? @default(now())
 }
 
 model QueueMember {
