@@ -5,6 +5,7 @@ const BotConfig = require('../../config/botConfig');
 
 module.exports = async msg => {
   if (msg.author.bot) return;
+  console.log(msg.member.user)
 
   const user = await upsertUser(msg.member.user);
 

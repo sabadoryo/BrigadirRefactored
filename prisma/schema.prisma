@@ -15,6 +15,7 @@ model User {
   name    String   @default("")
   discord_score Int @default(0)
   discord_id String @unique @default("")
+  avatar_hash String?
   halyavas Halyava[]
   teams TeamMember[]
   clanwarProfiles UserClanwarProfile[]
@@ -22,6 +23,7 @@ model User {
   parties PartyMember[]
   partiesLeader Party[]
   queues QueueMember[]
+  hostedQueues Queue[] @relation(name: "hostedQueues")
 
   @@map("users")
 }
@@ -29,6 +31,7 @@ model User {
 model Discipline {
   id Int @id @default(autoincrement())
   name String? @unique
+  icon_path String?
   clanwarProfiles UserClanwarProfile[]
   clanwars Clanwar[]
   parties Party[]
@@ -135,6 +138,10 @@ model Queue {
   members QueueMember[]
   amount Int?
   is_opened Boolean @default(true)
+  guild_id String? @default("634799085991231518")
+  voice_channel_id String? @default("700559004291563531")
+  host_id Int? 
+  host User? @relation(fields: [host_id], references: [id], name: "hostedQueues")
 }
 
 model QueueMember {
