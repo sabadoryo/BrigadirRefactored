@@ -1,10 +1,11 @@
 const db = require('../components/database')
 
-async function createQueue(creator_id, name, amount) {
+async function createQueue(creator_id, name, amount, discipline_id) {
   return db.queue.create({
     data: {
       name,
       amount,
+      discipline_id,
       members: {
         create: [{member_id: creator_id}]
       }

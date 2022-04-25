@@ -1,5 +1,6 @@
 const minimist = require('minimist');
 const { createDefaultTable } = require('../helpers/defaultTable');
+const { getDisciplineByName } = require('../models/Discipline');
 const { createQueue, findQueueByName, connectUserToQueue } = require('../models/Queue');
 
 class Queue {
@@ -57,6 +58,11 @@ class Queue {
       return false;
     }
 
+    if (mode == 'start' && !this.args.dicipline) {
+      this.discordMessage.reply(`Введите дисциплину: --d=dota/cs/valorant`)
+      return false;
+    }
+
     if (mode == 'join' && !queue) {
       this.discordMessage.reply('Такой очереди не существует')
       return false;
@@ -80,10 +86,14 @@ class Queue {
     if (this.args.a) {
       this.args.amount = this.args.a
     }
+    if (this.args.d) {
+      this.args.dicipline = this.args.d
+    }
   }
 
   async startQueue() {
-    const queue = await createQueue(this.user.id, this.args.name, this.args.amount ?? 0);
+    const dicipline = await getDisciplineByName(this.args.discipline);
+    const queue = await createQueue(this.user.id, this.args.name, this.args.amount ?? 0, dicipline.id);
 
     this.discordMessage.reply(`@everyone очередь на **${queue.name}** открыта!\nЧтобы присоедениться впишите:**!queue join --n=${queue.name}**\nПосмотреть список:**!queue list --n=${queue.name}**`)
   }
