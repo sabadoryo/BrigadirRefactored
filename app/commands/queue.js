@@ -96,12 +96,14 @@ class Queue {
     const queue = await createQueue(this.user.id, this.args.name, this.args.amount ?? 0, dicipline.id);
 
     this.discordMessage.reply(`@everyone очередь на **${queue.name}** открыта!\nЧтобы присоедениться впишите:**!queue join --n=${queue.name}**\nПосмотреть список:**!queue list --n=${queue.name}**`)
+    this.discordMessage.reply(`Все возможные манипуляции с очередями уже доступны: https://brigadir.sabadoryo.com`)
   }
 
   async joinQueue() {
     const queue = await connectUserToQueue(this.args.name, this.user.id)
 
     this.discordMessage.reply(`Вы были добавлены к очереди: ${queue.name}`)
+    this.discordMessage.reply(`Все возможные манипуляции с очередями уже доступны: https://brigadir.sabadoryo.com`)
   }
 
   async getQueueList() {
@@ -115,6 +117,7 @@ class Queue {
       embeds: [
         table
       ]})
+    this.discordMessage.reply(`Все возможные манипуляции с очередями уже доступны: https://brigadir.sabadoryo.com`)
   }
 }
 
