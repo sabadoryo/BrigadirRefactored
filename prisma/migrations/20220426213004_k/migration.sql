@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE `Queue` MODIFY `host_id` INTEGER NULL DEFAULT 1;

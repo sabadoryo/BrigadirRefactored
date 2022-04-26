@@ -23,7 +23,7 @@ model User {
   parties PartyMember[]
   partiesLeader Party[]
   queues QueueMember[]
-  hostedQueues Queue[] @relation(name: "hostedQueues")
+  hostedQueues Queue[]
 
   @@map("users")
 }
@@ -141,7 +141,7 @@ model Queue {
   guild_id String? @default("634799085991231518")
   voice_channel_id String? @default("700559004291563531")
   host_id Int? @default(1)
-  host User? @relation(fields: [host_id], references: [id], name: "hostedQueues")
+  host User? @relation(fields: [host_id], references: [id])
   created_at DateTime? @default(now())
 }
 
