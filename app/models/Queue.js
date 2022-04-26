@@ -6,6 +6,7 @@ async function createQueue(creator_id, name, amount, discipline_id) {
       name,
       amount,
       discipline_id,
+      host_id: creator_id,
       members: {
         create: [{member_id: creator_id}]
       }

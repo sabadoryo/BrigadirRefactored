@@ -51,14 +51,14 @@ class Queue {
 
     const mode = this.args._[0]
     const queue = await findQueueByName(this.args.name)
-
-
+    const discipline = await getDisciplineByName(this.args.dicipline)
+  
     if (mode == 'start' && queue && queue.is_opened) {
       this.discordMessage.reply(`Очередь с названием ${queue.name} уже открыта!`)
       return false;
     }
 
-    if (mode == 'start' && !this.args.dicipline) {
+    if (mode == 'start' && !discipline) {
       this.discordMessage.reply(`Введите дисциплину: --d=dota/cs/valorant`)
       return false;
     }
