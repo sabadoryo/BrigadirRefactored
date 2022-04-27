@@ -53,13 +53,6 @@ async function connectUserToQueue(name, user_id) {
           }
         }
       }
-    },
-    include: {
-      members: {
-        include : {
-          member: true
-        }
-      }
     }
   })
 }
