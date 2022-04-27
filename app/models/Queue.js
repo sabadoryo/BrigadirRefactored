@@ -40,9 +40,10 @@ async function findQueueByName(name) {
 }
 
 async function connectUserToQueue(name, user_id) {
-  return db.queue.update({
+  return db.queue.updateMany({
     where: {
-      name
+      name,
+      is_opened: true,
     },
     data: {
       members: {
