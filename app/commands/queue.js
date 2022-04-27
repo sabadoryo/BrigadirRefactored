@@ -100,10 +100,9 @@ class Queue {
   }
 
   async joinQueue() {
-    const queue = await connectUserToQueue(this.args.name, this.user.id)
-
-    this.discordMessage.reply(`Вы были добавлены к очереди: ${queue.name}`)
-    this.discordMessage.reply(`Все возможные манипуляции с очередями уже доступны: https://brigadir.sabadoryo.com`)
+    // const queue = await connectUserToQueue(this.args.name, this.user.id)
+    // this.discordMessage.reply(`Вы были добавлены к очереди: ${queue.name}`)
+    this.discordMessage.reply(`** Все возможные манипуляции с очередями уже доступны: https://brigadir.sabadoryo.com **`)
   }
 
   async getQueueList() {
