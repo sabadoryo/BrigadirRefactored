@@ -84,6 +84,8 @@ model Clanwar {
   discipline_id Int?
   pog User? @relation(fields: [pog_id], references: [id])
   pog_id Int?
+  queue Queue? @relation(fields: [queue_id], references: [id])
+  queue_id Int?
   @@map("clanwar")
 }
 
@@ -140,9 +142,11 @@ model Queue {
   is_opened Boolean @default(true)
   guild_id String? @default("634799085991231518")
   voice_channel_id String? @default("700559004291563531")
+  text_channel_id String? 
   host_id Int? @default(1)
   host User? @relation(fields: [host_id], references: [id])
   created_at DateTime? @default(now())
+  clanwar Clanwar?
 }
 
 model QueueMember {
@@ -151,5 +155,6 @@ model QueueMember {
   member_id Int
   queue Queue @relation(fields: [queue_id], references: [id])
   queue_id Int
+  is_ready Boolean @default(false)
   joined_at DateTime @default(now())
 }
