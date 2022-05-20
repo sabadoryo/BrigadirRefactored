@@ -31,7 +31,6 @@ jobs:
           host: ${{ secrets.SABADORYO_HOST }}
           username: ${{ secrets.SABADORYO_USERNAME }}
           password: ${{ secrets.SABADORYO_PASSWORD }}
-          port: ${{ secrets.SABADORYO_PORT }}
           script: |
             echo "test"
             cd /var/www/brigadir
