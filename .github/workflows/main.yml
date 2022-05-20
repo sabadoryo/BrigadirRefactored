@@ -24,13 +24,14 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
+      - name: Use Node.js
+        uses: actions/setup-node@v2
+        with: 
+         node-version: "16.x"
+
+      - name: Install dependencies
+      - run: npm install
 
       # Runs a single command using the runners shell
-      - name: Run a one-line script
+      - name: Restart pm2
         run: pm2 restart brigadir-bot
-
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
-        run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
